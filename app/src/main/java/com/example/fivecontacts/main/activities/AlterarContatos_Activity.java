@@ -50,18 +50,15 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
         bnv.setOnNavigationItemSelectedListener(this);
         bnv.setSelectedItemId(R.id.anvMudar);
 
-        //Dados da Intent Anterior
         Intent quemChamou = this.getIntent();
         if (quemChamou != null) {
             Bundle params = quemChamou.getExtras();
             if (params != null) {
-                //Recuperando o Usuario
                 user = (User) params.getSerializable("usuario");
                 setTitle("Alterar Contatos de Emergência");
             }
         }
         lv = findViewById(R.id.listContatosDoCell);
-        //Evento de limpar Componente
         edtNome.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -79,7 +76,8 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
         SharedPreferences salvaContatos =
                 getSharedPreferences("contatos", Activity.MODE_PRIVATE);
 
-        int num = salvaContatos.getInt("numContatos", 0); //checando quantos contatos já tem
+        int num = salvaContatos.getInt("numContatos", 0);
+
         SharedPreferences.Editor editor = salvaContatos.edit();
         try {
             ByteArrayOutputStream dt = new ByteArrayOutputStream();
@@ -88,7 +86,7 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
             oos = new ObjectOutputStream(dt);
             oos.writeObject(w);
             String contatoSerializado = dt.toString(StandardCharsets.ISO_8859_1.name());
-            editor.putString("contato" + (num + 1), contatoSerializado);
+            editor.putString(w.getNome(), contatoSerializado);
             editor.putInt("numContatos", num + 1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,17 +171,13 @@ public class AlterarContatos_Activity extends AppCompatActivity implements Botto
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Checagem de o Item selecionado é o do perfil
         if (item.getItemId() == R.id.anvPerfil) {
-            //Abertura da Tela MudarDadosUsario
             Intent intent = new Intent(this, PerfilUsuario_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);
 
         }
-        // Checagem de o Item selecionado é o do perfil
         if (item.getItemId() == R.id.anvLigar) {
-            //Abertura da Tela Mudar COntatos
             Intent intent = new Intent(this, ListaDeContatos_Activity.class);
             intent.putExtra("usuario", user);
             startActivity(intent);
